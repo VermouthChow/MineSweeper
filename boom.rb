@@ -9,7 +9,7 @@ class Boom
 
         total = (0..row*col).to_a
         size = total.size
-        @counts = (size*0.1).to_i+(0..(size*0.1).to_i).to_a.sample
+        @counts = ((size*0.15).to_i..(size*0.25).to_i).to_a.sample
         @positions = total.sample(counts).sort
         @boom_map ||= get_boom_map
     end

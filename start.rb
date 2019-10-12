@@ -4,11 +4,11 @@ class Start
 
     class << self
         def go
-            puts colorize('please input row(10-100):', 36)
+            puts colorize('please input row(10-26):', 36)
             while r = gets
-                break row = r.to_i if r.match(/^\d{2}$/) && r.to_i > 9 && r.to_i < 101
+                break row = r.to_i if r.match(/^\d{2}$/) && r.to_i > 9 && r.to_i < 27
 
-                puts colorize('Input error (valid number: 10-100), please check and retry:', 33)
+                puts colorize('Input error (valid number: 10-26), please check and retry:', 33)
             end
 
             puts colorize('please inputs column(10-26):', 36)
@@ -19,7 +19,6 @@ class Start
             end
             
             play(row, col)
-            
         end
 
         def play(row, col)
@@ -38,7 +37,7 @@ class Start
                     next
                 end
 
-                c = position[0].upcase.bytes[0] - 'A'.bytes[0]
+                c = position[0].upcase.bytes[0] - 'A'.bytes[0] # 字母转数字 
                 r = position[1..2].to_i
 
                 # 输入超出列数
@@ -54,16 +53,32 @@ class Start
 
                 position = col*r + c
 
+                # 之前已经输入过这个位置 
+                if play.clicked_num.include? position
+                    puts colorize("Already clicked this square -- #{back_up}, please retry:", 33)
+                    puts
+                    next
+                end
 
                 if play.booms_num.include?(position) # 踩雷
+                    score = 100 * (play.clicked_num.count.to_f/(play.map.counts - play.booms_num.count)).round(2)
+                    play.print_map(play.map.boom_map, position) 
                     puts "\n#{colorize('********************************* GAME OVER! *********************************', 41) }"
                     puts
-                    puts colorize("BOOM!:  #{back_up}", 45)
-                    play.print_map(play.map.boom_map, position) 
+                    puts colorize("   BOOM!:  #{back_up}      |    Score：#{ score }  ", 46)
                     break
                 else
-                    play.map.change_map(position) 
-                    play.print_map 
+                    puts
+                    puts colorize("Generating map...", 45)
+                    play.map.change_map(position)
+                    play.print_map
+
+                    if play.remaining_safety_counts.zero? # 找到所有雷
+                        puts "\n#{colorize('********************************* WIN! BOOMS CLEAR! *********************************', 45) }"
+                        puts
+                        puts colorize("   Score：100.0  ", 46)
+                        break
+                    end
                 end
 
                 puts colorize('please input position (eg: A3/a3) you want click', 36)

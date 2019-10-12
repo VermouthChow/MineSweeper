@@ -42,6 +42,14 @@ class Display
         map.booms.positions
     end
 
+    def clicked_num
+        map.clicked
+    end
+
+    def remaining_safety_counts
+        map.counts - booms_num.count - clicked_num.count
+    end
+
 end
 
 

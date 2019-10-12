@@ -20,12 +20,12 @@ class Near
             end
 
         elsif position >= col*(row - 1)
-            if position = col*(row - 1)
+            if position == col*(row - 1)
                 [e, d, b]
-            elsif position = col*row - 1
+            elsif position == col*row - 1
                 [e, c, a]
             else
-                [a, c, e, d. b]
+                [a, c, e, d, b]
             end
 
         else
@@ -38,6 +38,4 @@ class Near
             end
         end
     end
-
-
 end
